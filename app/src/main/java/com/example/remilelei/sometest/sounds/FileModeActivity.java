@@ -1,7 +1,11 @@
 package com.example.remilelei.sometest.sounds;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -33,6 +37,13 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
     boolean isInside;
     long startTime, endTime;
 
+    // this activity need some permissions
+    final private String[] PERMISSIONS = {
+            Manifest.permission.WRITE_EXTERNAL_STORAGE,
+            Manifest.permission.RECORD_AUDIO
+    };
+    final private int PERMISSION_WRITE_EXTERNAL_STORAGE_CODE = 1;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +62,9 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
 
         // shut down executor service when this activity is closed
         recordService.shutdownNow();
+
+        // release recorder if recorder is exist
+        releaseRecorder();
     }
 
     /**
@@ -142,7 +156,7 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
              */
             public void run() {
                 // 1. stop record and alert when exception happened
-                if(saveSound()) {
+                if(!saveSound()) {
                     recordFail();
                 }
 
@@ -154,21 +168,9 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
     }
 
     /**
-     * TODO stop record and save sounds
-     * 1. stop record
-     * 2. time count and ignore sounds too short
-     * 3.
-     * @return is sound save success
-     */
-    private boolean saveSound() {
-
-        return false;
-    }
-
-    /**
      * TODO record sound into a file
      * 1. create a MediaRecorder instance
-     * 2. create a file for store sounds
+     * 2. verify permission and create a file for store sounds
      * 3. config this MediaRecorder instance
      * 4. start record sounds and do a time count
      * and
@@ -180,11 +182,35 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
             // 1. create a MediaRecorder
             recorder = new MediaRecorder();
 
-            // 2. crate a file for store sounds
-            sounds = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                    + "/remile/sound" + System.currentTimeMillis() + ".mp3");
-            sounds.getParentFile().mkdir();
-            sounds.createNewFile();
+            // 2. verify permission and create a file for store sounds
+            if(verifyPermission()) {
+                sounds = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
+                        + "/remile/sound" + System.currentTimeMillis() + ".mp3");
+                File parent = sounds.getParentFile();
+                if(!parent.exists()) {
+                    if(sounds.getParentFile().mkdir()) {
+                        Log.i("FileModeActivity", "parent dir create success");
+                        if(sounds.createNewFile()) {
+                            Log.i("FileModeActivity", "record file create success");
+                        } else {
+                            Log.e("FileModeActivity", "record file create failed");
+                        }
+                    } else {
+                        Log.e("FileModeActivity", "parent dir create failed");
+                    }
+                } else {
+                    if(sounds.createNewFile()) {
+                        Log.i("FileModeActivity", "record file create success");
+                    } else {
+                        Log.e("FileModeActivity", "record file create failed");
+                    }
+                }
+            } else {
+                ActivityCompat.requestPermissions(this, PERMISSIONS,
+                        PERMISSION_WRITE_EXTERNAL_STORAGE_CODE);
+                throw new IllegalStateException("app have not storage permission!");
+            }
+            Log.i("FileModeActivity", "the file is built, prepared to record");
 
             // 3. config this MediaRecorder instance
             // 3.1 we get sounds from mic
@@ -203,16 +229,75 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
             // 4. tart record sounds and do a time count
             // 4.1 prepare to record
             recorder.prepare();
-            // 4.2 start to record, and
+            // 4.2 start to record
             recorder.start();
             // 4.3 time count
             startTime = System.currentTimeMillis();
+            Log.i("FileModeActivity", "record started.");
         } catch (IOException | IllegalStateException e) {
+            Log.e("FileModeActivity", "record failed!");
             e.printStackTrace();
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * TODO stop record and save sounds
+     * 1. stop record
+     * 2. time count and ignore sounds too short
+     * 3. change UI, show record result
+     * @return is sound save success
+     */
+    private boolean saveSound() {
+        try {
+            // 1. stop record
+            recorder.stop();
+            Log.i("FileModeActivity", "record stoped.");
+
+            // 2. time count and ignore sounds too short
+            endTime = System.currentTimeMillis();
+            final int sec = (int)(endTime - startTime) / 1000;
+            if(sec < 1 || sec > 30) throw new Exception("illegal record time=" + sec);
+
+            // 3. change UI, show record result
+            Runnable job = new Runnable() {
+                @Override
+                public void run() {
+                    tv_show.setText("record success, len=" + sec + "s");
+                }
+            };
+            runOnUiThread(job);
+        } catch (Exception e) {
+            Log.e("FileModeActivity", "save sounds failed!");
+            e.printStackTrace();
+            return false;
+        }
+        Log.i("FileModeActivity", "record " + (sounds.exists()? "success":"failed") + ", save path=" + sounds.getAbsolutePath());
+        return true;
+    }
+
+    /**
+     *
+     * @return
+     */
+    private boolean verifyPermission() {
+        int permission_write = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permission_record = ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.RECORD_AUDIO);
+        if(permission_write != PackageManager.PERMISSION_GRANTED ||
+                permission_record != PackageManager.PERMISSION_GRANTED)  return false;
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(requestCode == PERMISSION_WRITE_EXTERNAL_STORAGE_CODE) {
+
+        }
     }
 
     /**
@@ -239,6 +324,9 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
     }
 
     private void releaseRecorder() {
-
+        if(recorder != null) {
+            recorder.release();
+            recorder = null;
+        }
     }
 }
