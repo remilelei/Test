@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">SomeTest</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
+    <string name="rcd_unpressed">按下说话</string>
+    <string name="rcd_pressed">松手完成录制</string>
+    <string name="rcd_fail">录音失败</string>
+</resources>

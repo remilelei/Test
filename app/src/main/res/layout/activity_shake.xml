@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.remilelei.sometest.shake.ShakeActivity"
+    android:background="#ff222222"
+    >
+
+    <ImageView
+        android:layout_centerInParent="true"
+        android:src="@drawable/wechat"
+        android:layout_width="90dp"
+        android:layout_height="90dp" />
+    <RelativeLayout
+        android:gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:id="@+id/ll_top"
+            android:layout_width="wrap_content"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:src="@drawable/shake_top"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp" />
+            <ImageView
+                android:id="@+id/iv_line_top"
+                android:background="@drawable/shake_top_line"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_bottom"
+            android:orientation="vertical"
+            android:layout_below="@+id/ll_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/iv_line_bottom"
+                android:background="@drawable/shake_bottom_line"
+                android:layout_width="match_parent"
+                android:layout_height="5dp"
+                android:layout_alignParentTop="true"
+                />
+            <ImageView
+                android:src="@drawable/shake_bottom"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp" />
+        </LinearLayout>
+    </RelativeLayout>
+
+
+</RelativeLayout>
