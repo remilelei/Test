@@ -35,7 +35,8 @@
 
         <activity android:name=".shake.ShakeActivity" />
         <activity android:name=".sounds.SoundRecordActivity" />
-        <activity android:name=".sounds.FileModeActivity"></activity>
+        <activity android:name=".sounds.FileModeActivity" />
+        <activity android:name=".sounds.StreamModeActivity"></activity>
     </application>
 
 </manifest>

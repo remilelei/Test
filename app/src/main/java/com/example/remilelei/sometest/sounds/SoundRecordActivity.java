@@ -22,7 +22,7 @@ public class SoundRecordActivity extends AppCompatActivity {
                 break;
             }
             case R.id.btn_sound_stream: {
-
+                startActivity(new Intent(this, StreamModeActivity.class));
                 break;
             }
         }

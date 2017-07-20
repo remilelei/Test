@@ -168,7 +168,7 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
     }
 
     /**
-     * TODO record sound into a file
+     * record sound into a file
      * 1. create a MediaRecorder instance
      * 2. verify permission and create a file for store sounds
      * 3. config this MediaRecorder instance
@@ -185,7 +185,7 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
             // 2. verify permission and create a file for store sounds
             if(verifyPermission()) {
                 sounds = new File(Environment.getExternalStorageDirectory().getAbsolutePath()
-                        + "/remile/sound" + System.currentTimeMillis() + ".mp3");
+                        + "/remile/Fsound" + System.currentTimeMillis() + ".mp3");
                 File parent = sounds.getParentFile();
                 if(!parent.exists()) {
                     if(sounds.getParentFile().mkdir()) {
@@ -244,7 +244,7 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
     }
 
     /**
-     * TODO stop record and save sounds
+     * stop record and save sounds
      * 1. stop record
      * 2. time count and ignore sounds too short
      * 3. change UI, show record result
@@ -279,8 +279,8 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
     }
 
     /**
-     *
-     * @return
+     * verify permission to create file
+     * @return verify result
      */
     private boolean verifyPermission() {
         int permission_write = ActivityCompat.checkSelfPermission(this,
@@ -301,7 +301,7 @@ public class FileModeActivity extends AppCompatActivity implements View.OnTouchL
     }
 
     /**
-     * TODO call this method when record is failed
+     * call this method when record is failed
      * 1. clear sounds file
      * 2. make a toast to tell user record is failed
      */
