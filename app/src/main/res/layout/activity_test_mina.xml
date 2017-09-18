@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.remilelei.sometest.minatest.TestMinaActivity">
+
+    <Button
+        android:id="@+id/btn_mina_link_start"
+        android:text="开始连接"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"/>
+    <Button
+        android:id="@+id/btn_mina_send_msg"
+        android:text="发送消息"
+        android:layout_below="@+id/btn_mina_link_start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"/>
+    <Button
+        android:id="@+id/btn_mina_link_close"
+        android:text="关闭连接"
+        android:layout_below="@+id/btn_mina_send_msg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="onClick"/>
+
+</RelativeLayout>

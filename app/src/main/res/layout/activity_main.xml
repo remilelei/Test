@@ -24,4 +24,10 @@
         tools:layout_editor_absoluteX="8dp"
         android:onClick="onClick"/>
 
+    <Button
+        android:id="@+id/btn_to_test_mina"
+        android:text="测试Mina"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

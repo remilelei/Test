@@ -32,17 +32,25 @@
         </receiver>
 
         <service android:name=".widget.UpdateWidgetService" />
-        <service android:name="com.example.remilelei.sometest.aidl.IRemoteService"
-            android:process=":remote"
-            android:exported="true">
+        <service
+            android:name=".aidl.IRemoteService"
+            android:exported="true"
+            android:process=":remote">
             <intent-filter>
                 <action android:name="com.example.remilelei.sometest.aidl.ITestAidl" />
             </intent-filter>
         </service>
+
         <activity android:name=".shake.ShakeActivity" />
         <activity android:name=".sounds.SoundRecordActivity" />
         <activity android:name=".sounds.FileModeActivity" />
-        <activity android:name=".sounds.StreamModeActivity"></activity>
+        <activity android:name=".sounds.StreamModeActivity" />
+        <activity android:name=".minatest.TestMinaActivity" />
+
+        <service
+            android:name=".minatest.MInaService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
