@@ -22,7 +22,7 @@ public class ConnectionManager {
 
     private ConnectionConfig mConfig;
     private NioSocketConnector mConnector;
-    private IoSession mSession;
+    private static IoSession mSession;
     private InetSocketAddress mAddress;
 
     public ConnectionManager(ConnectionConfig config) {
@@ -39,6 +39,7 @@ public class ConnectionManager {
         mConnector.getFilterChain().addLast("codec",
                 new ProtocolCodecFilter(new ObjectSerializationCodecFactory()));
         mConnector.setHandler(new DemoHandler(mConfig.mContext));
+        mConnector.setDefaultRemoteAddress(mAddress);
     }
 
     public boolean connect() {
@@ -51,6 +52,10 @@ public class ConnectionManager {
             return false;
         }
         return mSession != null;
+    }
+
+    public static IoSession getSession() {
+        return mSession;
     }
 
     public void disconnect() {
